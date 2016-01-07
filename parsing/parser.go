@@ -11,18 +11,19 @@ import (
 const QueryNotCompleteError = "Query is not complete. Expected %s statement."
 
 // Parser parses SQL query into AST.
-type Parser struct {
-	tokenizer *Tokenizer
-}
+type Parser struct{}
 
 // NewParser creates a Parser instance for the provided query.
-func NewParser(queryReader io.Reader) *Parser {
-	return &Parser{tokenizer: NewTokenizer(queryReader)}
+func NewParser() *Parser {
+	return &Parser{}
 }
 
 // Parse parses the query into a Node.
-func (p *Parser) Parse() (ast.Node, error) {
+func (p *Parser) ParseReader(queryReader io.Reader) (ast.Node, error) {
+	tokenizer := NewTokenizer(queryReader)
+
 	result := p.parseStates(
+		tokenizer,
 		nil,
 		false,
 		selectState(),
@@ -32,12 +33,16 @@ func (p *Parser) Parse() (ast.Node, error) {
 	return result, nil
 }
 
-func (p *Parser) parseStates(result ast.Node, isEndState bool, availableStates ...State) ast.Node {
+func (p *Parser) ParseString(query string) (ast.Node, error) {
+	return p.ParseReader(strings.NewReader(query))
+}
+
+func (p *Parser) parseStates(tokenizer *Tokenizer, result ast.Node, isEndState bool, availableStates ...State) ast.Node {
 	var stateNames []string
 	for _, next := range availableStates {
 		stateNames = append(stateNames, next.Name())
-		if result, ok := next.Parse(result, p.tokenizer); ok {
-			return p.parseStates(result, next.IsEndState(), next.Next()...)
+		if result, ok := next.Parse(result, tokenizer); ok {
+			return p.parseStates(tokenizer, result, next.IsEndState(), next.Next()...)
 		}
 	}
 	if isEndState {

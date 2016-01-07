@@ -2,7 +2,6 @@ package parsing_test
 
 import (
 	"reflect"
-	"strings"
 	"testing"
 
 	. "github.com/s2gatev/sqlmorph/ast"
@@ -33,7 +32,7 @@ func testPanic(t *testing.T, expectedMessage string) {
 }
 
 func parseQuery(query string) (Node, error) {
-	return NewParser(strings.NewReader(query)).Parse()
+	return NewParser().ParseString(query)
 }
 
 func testParseCorrectQuery(t *testing.T,
