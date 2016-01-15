@@ -14,7 +14,7 @@ func TestSelectParsing(t *testing.T) {
 				Fields: []*Field{
 					&Field{Name: "Name"},
 				},
-				Table: &Table{Name: "User"},
+				Target: Target{Name: "User"},
 			},
 		},
 		{
@@ -23,7 +23,7 @@ func TestSelectParsing(t *testing.T) {
 				Fields: []*Field{
 					&Field{Name: "Name"}, &Field{Name: "Location"}, &Field{Name: "Age"},
 				},
-				Table: &Table{Name: "User"},
+				Target: Target{Name: "User"},
 			},
 		},
 		{
@@ -32,7 +32,7 @@ func TestSelectParsing(t *testing.T) {
 				Fields: []*Field{
 					&Field{Name: "*"},
 				},
-				Table: &Table{Name: "User"},
+				Target: Target{Name: "User"},
 			},
 		},
 		{
@@ -43,7 +43,7 @@ func TestSelectParsing(t *testing.T) {
 					&Field{Target: "u", Name: "Location"},
 					&Field{Target: "u", Name: "Age"},
 				},
-				Table: &Table{Name: "User", Alias: "u"},
+				Target: Target{Name: "User", Alias: "u"},
 			},
 		},
 		{
@@ -52,13 +52,13 @@ func TestSelectParsing(t *testing.T) {
 				Fields: []*Field{
 					&Field{Target: "u", Name: "Name"},
 				},
-				Conditions: []*EqualsCondition{
-					&EqualsCondition{
+				Filters: Filters{
+					&EqualsFilter{
 						Field: &Field{Target: "u", Name: "Age"},
 						Value: "21",
 					},
 				},
-				Table: &Table{Name: "User", Alias: "u"},
+				Target: Target{Name: "User", Alias: "u"},
 			},
 		},
 		{
@@ -69,8 +69,8 @@ func TestSelectParsing(t *testing.T) {
 					&Field{Target: "u", Name: "Location"},
 					&Field{Target: "u", Name: "Age"},
 				},
-				Limit: "10",
-				Table: &Table{Name: "User", Alias: "u"},
+				Limit:  "10",
+				Target: Target{Name: "User", Alias: "u"},
 			},
 		},
 		{
@@ -83,7 +83,7 @@ func TestSelectParsing(t *testing.T) {
 				},
 				Limit:  "10",
 				Offset: "20",
-				Table:  &Table{Name: "User", Alias: "u"},
+				Target: Target{Name: "User", Alias: "u"},
 			},
 		},
 		{
@@ -93,12 +93,12 @@ func TestSelectParsing(t *testing.T) {
 					&Field{Name: "Name"},
 					&Field{Name: "Location"},
 				},
-				Table: &Table{Name: "User"},
-				JoinTables: []Join{
+				Target: Target{Name: "User"},
+				Relations: Relations{
 					&InnerJoin{
-						Table: &Table{Name: "Address"},
-						Left:  &Field{Name: "ID"},
-						Right: &Field{Name: "UserID"},
+						Target: Target{Name: "Address"},
+						Left:   &Field{Name: "ID"},
+						Right:  &Field{Name: "UserID"},
 					},
 				},
 			},
@@ -110,12 +110,12 @@ func TestSelectParsing(t *testing.T) {
 					&Field{Target: "u", Name: "Name"},
 					&Field{Target: "a", Name: "Location"},
 				},
-				Table: &Table{Name: "User", Alias: "u"},
-				JoinTables: []Join{
+				Target: Target{Name: "User", Alias: "u"},
+				Relations: Relations{
 					&InnerJoin{
-						Table: &Table{Name: "Address", Alias: "a"},
-						Left:  &Field{Target: "u", Name: "ID"},
-						Right: &Field{Target: "a", Name: "UserID"},
+						Target: Target{Name: "Address", Alias: "a"},
+						Left:   &Field{Target: "u", Name: "ID"},
+						Right:  &Field{Target: "a", Name: "UserID"},
 					},
 				},
 			},
@@ -126,10 +126,10 @@ func TestSelectParsing(t *testing.T) {
 				Fields: []*Field{
 					&Field{Target: "u", Name: "Name"},
 				},
-				Table: &Table{Name: "User", Alias: "u"},
-				JoinTables: []Join{
+				Target: Target{Name: "User", Alias: "u"},
+				Relations: Relations{
 					&CrossJoin{
-						Table: &Table{Name: "Client"},
+						Target: Target{Name: "Client"},
 					},
 				},
 			},
@@ -141,10 +141,10 @@ func TestSelectParsing(t *testing.T) {
 					&Field{Target: "u", Name: "Name"},
 					&Field{Target: "c", Name: "Name"},
 				},
-				Table: &Table{Name: "User", Alias: "u"},
-				JoinTables: []Join{
+				Target: Target{Name: "User", Alias: "u"},
+				Relations: Relations{
 					&CrossJoin{
-						Table: &Table{Name: "Client", Alias: "c"},
+						Target: Target{Name: "Client", Alias: "c"},
 					},
 				},
 			},
@@ -156,12 +156,12 @@ func TestSelectParsing(t *testing.T) {
 					&Field{Name: "Name"},
 					&Field{Name: "Location"},
 				},
-				Table: &Table{Name: "User"},
-				JoinTables: []Join{
+				Target: Target{Name: "User"},
+				Relations: Relations{
 					&LeftJoin{
-						Table: &Table{Name: "Address"},
-						Left:  &Field{Name: "ID"},
-						Right: &Field{Name: "UserID"},
+						Target: Target{Name: "Address"},
+						Left:   &Field{Name: "ID"},
+						Right:  &Field{Name: "UserID"},
 					},
 				},
 			},
@@ -173,12 +173,12 @@ func TestSelectParsing(t *testing.T) {
 					&Field{Target: "u", Name: "Name"},
 					&Field{Target: "a", Name: "Location"},
 				},
-				Table: &Table{Name: "User", Alias: "u"},
-				JoinTables: []Join{
+				Target: Target{Name: "User", Alias: "u"},
+				Relations: Relations{
 					&LeftJoin{
-						Table: &Table{Name: "Address", Alias: "a"},
-						Left:  &Field{Target: "u", Name: "ID"},
-						Right: &Field{Target: "a", Name: "UserID"},
+						Target: Target{Name: "Address", Alias: "a"},
+						Left:   &Field{Target: "u", Name: "ID"},
+						Right:  &Field{Target: "a", Name: "UserID"},
 					},
 				},
 			},
@@ -190,12 +190,12 @@ func TestSelectParsing(t *testing.T) {
 					&Field{Name: "Name"},
 					&Field{Name: "Location"},
 				},
-				Table: &Table{Name: "User"},
-				JoinTables: []Join{
+				Target: Target{Name: "User"},
+				Relations: Relations{
 					&RightJoin{
-						Table: &Table{Name: "Address"},
-						Left:  &Field{Name: "ID"},
-						Right: &Field{Name: "UserID"},
+						Target: Target{Name: "Address"},
+						Left:   &Field{Name: "ID"},
+						Right:  &Field{Name: "UserID"},
 					},
 				},
 			},
@@ -207,12 +207,12 @@ func TestSelectParsing(t *testing.T) {
 					&Field{Target: "u", Name: "Name"},
 					&Field{Target: "a", Name: "Location"},
 				},
-				Table: &Table{Name: "User", Alias: "u"},
-				JoinTables: []Join{
+				Target: Target{Name: "User", Alias: "u"},
+				Relations: Relations{
 					&RightJoin{
-						Table: &Table{Name: "Address", Alias: "a"},
-						Left:  &Field{Target: "u", Name: "ID"},
-						Right: &Field{Target: "a", Name: "UserID"},
+						Target: Target{Name: "Address", Alias: "a"},
+						Left:   &Field{Target: "u", Name: "ID"},
+						Right:  &Field{Target: "a", Name: "UserID"},
 					},
 				},
 			},

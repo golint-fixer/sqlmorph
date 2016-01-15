@@ -17,7 +17,7 @@ func (s *WhereState) Name() string {
 }
 
 func (s *WhereState) Parse(result ast.Node, tokenizer *Tokenizer) (ast.Node, bool) {
-	target := result.(ast.HasConditions)
+	concrete := result.(ast.Filterable)
 
 	if token, _ := tokenizer.ReadToken(); token != WHERE {
 		tokenizer.UnreadToken()
@@ -26,10 +26,10 @@ func (s *WhereState) Parse(result ast.Node, tokenizer *Tokenizer) (ast.Node, boo
 
 	// Parse WHERE conditions.
 	for {
-		condition := &ast.EqualsCondition{}
+		filter := &ast.EqualsFilter{}
 
 		if token, field := tokenizer.ReadToken(); token == LITERAL {
-			condition.Field = parseField(field)
+			filter.Field = parseField(field)
 		} else {
 			wrongTokenPanic(WhereWithoutConditionsError, field)
 		}
@@ -39,12 +39,12 @@ func (s *WhereState) Parse(result ast.Node, tokenizer *Tokenizer) (ast.Node, boo
 		}
 
 		if token, value := tokenizer.ReadToken(); token == LITERAL || token == PLACEHOLDER {
-			condition.Value = value
+			filter.Value = value
 		} else {
 			wrongTokenPanic(WhereWithoutConditionsError, value)
 		}
 
-		target.AddCondition(condition)
+		concrete.AddFilter(filter)
 
 		if token, _ := tokenizer.ReadToken(); token != AND {
 			tokenizer.UnreadToken()

@@ -17,28 +17,28 @@ func (s *FromState) Name() string {
 }
 
 func (s *FromState) Parse(result ast.Node, tokenizer *Tokenizer) (ast.Node, bool) {
-	target := result.(ast.HasTable)
+	concrete := result.(ast.Targetable)
 
 	if token, _ := tokenizer.ReadToken(); token != FROM {
 		tokenizer.UnreadToken()
 		return result, false
 	}
 
-	table := &ast.Table{}
+	target := &ast.Target{}
 
 	if token, tableName := tokenizer.ReadToken(); token == LITERAL {
-		table.Name = tableName
+		target.Name = tableName
 	} else {
 		wrongTokenPanic(FromWithoutTargetError, tableName)
 	}
 
 	if token, tableAlias := tokenizer.ReadToken(); token == LITERAL {
-		table.Alias = tableAlias
+		target.Alias = tableAlias
 	} else {
 		tokenizer.UnreadToken()
 	}
 
-	target.SetTable(table)
+	concrete.SetTarget(target)
 
 	return result, true
 }

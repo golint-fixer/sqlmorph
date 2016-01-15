@@ -18,7 +18,7 @@ func (s *CrossJoinState) Name() string {
 }
 
 func (s *CrossJoinState) Parse(result ast.Node, tokenizer *Tokenizer) (ast.Node, bool) {
-	target := result.(ast.HasJoin)
+	concrete := result.(ast.Relationable)
 
 	if token, _ := tokenizer.ReadToken(); token != CROSS {
 		tokenizer.UnreadToken()
@@ -30,23 +30,23 @@ func (s *CrossJoinState) Parse(result ast.Node, tokenizer *Tokenizer) (ast.Node,
 	}
 
 	join := &ast.CrossJoin{}
-	table := &ast.Table{}
+	target := &ast.Target{}
 
 	if token, tableName := tokenizer.ReadToken(); token == LITERAL {
-		table.Name = tableName
+		target.Name = tableName
 	} else {
 		wrongTokenPanic(CrossJoinWithoutTargetError, tableName)
 	}
 
 	if token, tableAlias := tokenizer.ReadToken(); token == LITERAL {
-		table.Alias = tableAlias
+		target.Alias = tableAlias
 	} else {
 		tokenizer.UnreadToken()
 	}
 
-	join.Table = table
+	join.SetTarget(target)
 
-	target.AddJoin(join)
+	concrete.AddRelation(join)
 
 	return result, true
 }

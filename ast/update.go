@@ -2,9 +2,9 @@ package ast
 
 // Update represents an Update SQL query AST node.
 type Update struct {
-	Fields     []*Field
-	Table      *Table
-	Conditions []*EqualsCondition
+	Target
+	Filters
+	Fields
 }
 
 func NewUpdate() *Update {
@@ -15,20 +15,8 @@ func (u *Update) AddField(field *Field) {
 	u.Fields = append(u.Fields, field)
 }
 
-func (u *Update) AddCondition(condition *EqualsCondition) {
-	u.Conditions = append(u.Conditions, condition)
-}
-
-func (u *Update) SetTable(table *Table) {
-	u.Table = table
-}
-
-func (u *Update) GetTable() *Table {
-	return u.Table
-}
-
 func (u *Update) BuildQuery() string {
-	query := "UPDATE " + u.Table.BuildQuery()
+	query := "UPDATE " + u.GetTarget().BuildQuery()
 
 	fieldsPart := ""
 	for index, field := range u.Fields {
@@ -40,15 +28,15 @@ func (u *Update) BuildQuery() string {
 	query += " SET " + fieldsPart
 
 	// Build WHERE part.
-	if len(u.Conditions) > 0 {
-		conditionsPart := ""
-		for index, condition := range u.Conditions {
+	if len(u.Filters) > 0 {
+		jointFilters := ""
+		for index, filter := range u.Filters {
 			if index != 0 {
-				conditionsPart += " AND "
+				jointFilters += " AND "
 			}
-			conditionsPart += condition.BuildQuery()
+			jointFilters += filter.BuildQuery()
 		}
-		query += " WHERE " + conditionsPart
+		query += " WHERE " + jointFilters
 	}
 
 	return query

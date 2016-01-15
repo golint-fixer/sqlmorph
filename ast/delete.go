@@ -2,38 +2,26 @@ package ast
 
 // Delete represents an DELETE SQL query AST node.
 type Delete struct {
-	Table      *Table
-	Conditions []*EqualsCondition
+	Target
+	Filters
 }
 
 func NewDelete() *Delete {
 	return &Delete{}
 }
 
-func (d *Delete) AddCondition(condition *EqualsCondition) {
-	d.Conditions = append(d.Conditions, condition)
-}
-
-func (d *Delete) SetTable(table *Table) {
-	d.Table = table
-}
-
-func (d *Delete) GetTable() *Table {
-	return d.Table
-}
-
 func (d *Delete) BuildQuery() string {
-	query := "DELETE FROM " + d.Table.BuildQuery()
+	query := "DELETE FROM " + d.GetTarget().BuildQuery()
 
-	if len(d.Conditions) > 0 {
-		conditionsPart := ""
-		for index, condition := range d.Conditions {
+	if len(d.Filters) > 0 {
+		jointFilters := ""
+		for index, filter := range d.Filters {
 			if index != 0 {
-				conditionsPart += " AND "
+				jointFilters += " AND "
 			}
-			conditionsPart += condition.BuildQuery()
+			jointFilters += filter.BuildQuery()
 		}
-		query += " WHERE " + conditionsPart
+		query += " WHERE " + jointFilters
 	}
 
 	return query

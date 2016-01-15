@@ -17,7 +17,7 @@ func (s *SetState) Name() string {
 }
 
 func (s *SetState) Parse(result ast.Node, tokenizer *Tokenizer) (ast.Node, bool) {
-	target := result.(ast.HasFields)
+	concrete := result.(ast.Container)
 
 	if token, _ := tokenizer.ReadToken(); token != SET {
 		tokenizer.UnreadToken()
@@ -44,7 +44,7 @@ func (s *SetState) Parse(result ast.Node, tokenizer *Tokenizer) (ast.Node, bool)
 			wrongTokenPanic(SetWithoutFieldsError, value)
 		}
 
-		target.AddField(field)
+		concrete.AddField(field)
 
 		if token, _ := tokenizer.ReadToken(); token != COMMA {
 			tokenizer.UnreadToken()

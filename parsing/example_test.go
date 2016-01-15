@@ -15,13 +15,13 @@ func ExampleSelectParsing() {
 		Fields: []*ast.Field{
 			&ast.Field{Target: "u", Name: "Name"},
 		},
-		Conditions: []*ast.EqualsCondition{
-			&ast.EqualsCondition{
+		Filters: ast.Filters{
+			&ast.EqualsFilter{
 				Field: &ast.Field{Target: "u", Name: "Age"},
 				Value: "21",
 			},
 		},
-		Table: &ast.Table{Name: "User", Alias: "u"},
+		Target: ast.Target{Name: "User", Alias: "u"},
 	}
 	actual, _ := parsing.NewParser().ParseString(query)
 

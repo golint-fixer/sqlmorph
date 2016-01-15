@@ -20,7 +20,7 @@ func (s *RightJoinState) Name() string {
 }
 
 func (s *RightJoinState) Parse(result ast.Node, tokenizer *Tokenizer) (ast.Node, bool) {
-	target := result.(ast.HasJoin)
+	concrete := result.(ast.Relationable)
 
 	if token, _ := tokenizer.ReadToken(); token != RIGHT {
 		tokenizer.UnreadToken()
@@ -32,21 +32,21 @@ func (s *RightJoinState) Parse(result ast.Node, tokenizer *Tokenizer) (ast.Node,
 	}
 
 	join := &ast.RightJoin{}
-	table := &ast.Table{}
+	target := &ast.Target{}
 
 	if token, tableName := tokenizer.ReadToken(); token == LITERAL {
-		table.Name = tableName
+		target.Name = tableName
 	} else {
 		wrongTokenPanic(RightJoinWithoutTargetError, tableName)
 	}
 
 	if token, tableAlias := tokenizer.ReadToken(); token == LITERAL {
-		table.Alias = tableAlias
+		target.Alias = tableAlias
 	} else {
 		tokenizer.UnreadToken()
 	}
 
-	join.Table = table
+	join.SetTarget(target)
 
 	if token, value := tokenizer.ReadToken(); token != ON {
 		wrongTokenPanic(RightJoinWithoutOnError, value)
@@ -68,7 +68,7 @@ func (s *RightJoinState) Parse(result ast.Node, tokenizer *Tokenizer) (ast.Node,
 		wrongTokenPanic(RightJoinWrongJoinFieldsError, rightField)
 	}
 
-	target.AddJoin(join)
+	concrete.AddRelation(join)
 
 	return result, true
 }

@@ -17,7 +17,7 @@ func (s *OffsetState) Name() string {
 }
 
 func (s *OffsetState) Parse(result ast.Node, tokenizer *Tokenizer) (ast.Node, bool) {
-	target := result.(ast.HasOffset)
+	concrete := result.(ast.Offsetable)
 
 	if token, _ := tokenizer.ReadToken(); token != OFFSET {
 		tokenizer.UnreadToken()
@@ -25,7 +25,7 @@ func (s *OffsetState) Parse(result ast.Node, tokenizer *Tokenizer) (ast.Node, bo
 	}
 
 	if token, offset := tokenizer.ReadToken(); token == LITERAL {
-		target.SetOffset(offset)
+		concrete.SetOffset(offset)
 	} else {
 		wrongTokenPanic(OffsetWithoutNumberError, offset)
 	}

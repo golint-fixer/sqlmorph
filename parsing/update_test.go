@@ -14,13 +14,13 @@ func TestUpdateParsing(t *testing.T) {
 				Fields: []*Field{
 					&Field{Target: "u", Name: "Name", Value: "?"},
 				},
-				Conditions: []*EqualsCondition{
-					&EqualsCondition{
+				Filters: Filters{
+					&EqualsFilter{
 						Field: &Field{Target: "u", Name: "Age"},
 						Value: "21",
 					},
 				},
-				Table: &Table{Name: "User", Alias: "u"},
+				Target: Target{Name: "User", Alias: "u"},
 			},
 		},
 		{
@@ -29,13 +29,13 @@ func TestUpdateParsing(t *testing.T) {
 				Fields: []*Field{
 					&Field{Name: "Name", Value: "?"},
 				},
-				Conditions: []*EqualsCondition{
-					&EqualsCondition{
+				Filters: Filters{
+					&EqualsFilter{
 						Field: &Field{Name: "Age"},
 						Value: "21",
 					},
 				},
-				Table: &Table{Name: "User"},
+				Target: Target{Name: "User"},
 			},
 		},
 	})

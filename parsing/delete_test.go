@@ -11,13 +11,13 @@ func TestDeleteParsing(t *testing.T) {
 		{
 			Query: `DELETE FROM User u WHERE u.Name=?`,
 			Expected: &Delete{
-				Conditions: []*EqualsCondition{
-					&EqualsCondition{
+				Filters: Filters{
+					&EqualsFilter{
 						Field: &Field{Target: "u", Name: "Name"},
 						Value: "?",
 					},
 				},
-				Table: &Table{Name: "User", Alias: "u"},
+				Target: Target{Name: "User", Alias: "u"},
 			},
 		},
 	})

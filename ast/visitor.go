@@ -14,24 +14,24 @@ func (v *Visitor) Visit(node Node, handle func(Node)) {
 		for _, field := range concrete.Fields {
 			v.Visit(field, handle)
 		}
-		for _, join := range concrete.JoinTables {
+		for _, join := range concrete.Relations {
 			v.Visit(join, handle)
 		}
-		for _, condition := range concrete.Conditions {
-			v.Visit(condition, handle)
+		for _, filter := range concrete.Filters {
+			v.Visit(filter, handle)
 		}
 	case *Update:
 		for _, field := range concrete.Fields {
 			v.Visit(field, handle)
 		}
-		for _, condition := range concrete.Conditions {
-			v.Visit(condition, handle)
+		for _, filter := range concrete.Filters {
+			v.Visit(filter, handle)
 		}
 	case *Delete:
-		for _, condition := range concrete.Conditions {
-			v.Visit(condition, handle)
+		for _, filter := range concrete.Filters {
+			v.Visit(filter, handle)
 		}
-	case *EqualsCondition:
+	case *EqualsFilter:
 		v.Visit(concrete.Field, handle)
 	case *InnerJoin:
 		v.Visit(concrete.Left, handle)

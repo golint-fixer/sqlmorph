@@ -2,44 +2,16 @@ package ast
 
 // Select represents a SQL SELECT statement.
 type Select struct {
-	Fields     []*Field
-	Table      *Table
-	JoinTables []Join
-	Conditions []*EqualsCondition
-	Limit      string
-	Offset     string
+	Target
+	Limit
+	Offset
+	Relations
+	Filters
+	Fields
 }
 
 func NewSelect() *Select {
 	return &Select{}
-}
-
-func (ss *Select) AddField(field *Field) {
-	ss.Fields = append(ss.Fields, field)
-}
-
-func (ss *Select) AddCondition(condition *EqualsCondition) {
-	ss.Conditions = append(ss.Conditions, condition)
-}
-
-func (ss *Select) SetTable(table *Table) {
-	ss.Table = table
-}
-
-func (ss *Select) GetTable() *Table {
-	return ss.Table
-}
-
-func (ss *Select) SetLimit(limit string) {
-	ss.Limit = limit
-}
-
-func (ss *Select) SetOffset(offset string) {
-	ss.Offset = offset
-}
-
-func (ss *Select) AddJoin(join Join) {
-	ss.JoinTables = append(ss.JoinTables, join)
 }
 
 func (ss *Select) BuildQuery() string {
@@ -56,32 +28,32 @@ func (ss *Select) BuildQuery() string {
 	query += "SELECT " + fieldsPart
 
 	// Build FROM part.
-	query += " FROM " + ss.Table.BuildQuery()
+	query += " FROM " + ss.GetTarget().BuildQuery()
 
-	for _, join := range ss.JoinTables {
+	for _, join := range ss.Relations {
 		query += " " + join.BuildQuery()
 	}
 
 	// Build WHERE part.
-	if len(ss.Conditions) > 0 {
-		conditionsPart := ""
-		for index, condition := range ss.Conditions {
+	if len(ss.Filters) > 0 {
+		jointFilters := ""
+		for index, filter := range ss.Filters {
 			if index != 0 {
-				conditionsPart += " AND "
+				jointFilters += " AND "
 			}
-			conditionsPart += condition.BuildQuery()
+			jointFilters += filter.BuildQuery()
 		}
-		query += " WHERE " + conditionsPart
+		query += " WHERE " + jointFilters
 	}
 
 	// Build LIMIT part.
-	if ss.Limit != "" {
-		query += " LIMIT " + ss.Limit
+	if ss.GetLimit() != "" {
+		query += " LIMIT " + ss.GetLimit()
 	}
 
 	// Build OFFSET part.
-	if ss.Offset != "" {
-		query += " OFFSET " + ss.Offset
+	if ss.GetOffset() != "" {
+		query += " OFFSET " + ss.GetOffset()
 	}
 	return query
 }
