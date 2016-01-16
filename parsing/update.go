@@ -17,7 +17,7 @@ func (s *UpdateState) Name() string {
 }
 
 func (s *UpdateState) Parse(result ast.Node, tokenizer *Tokenizer) (ast.Node, bool) {
-	concrete := ast.NewUpdate()
+	concrete := &ast.Update{}
 
 	if token, _ := tokenizer.ReadToken(); token != UPDATE {
 		tokenizer.UnreadToken()

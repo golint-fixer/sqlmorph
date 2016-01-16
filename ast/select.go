@@ -10,10 +10,7 @@ type Select struct {
 	Fields
 }
 
-func NewSelect() *Select {
-	return &Select{}
-}
-
+// BuildQuery turns the node into an SQL statement.
 func (ss *Select) BuildQuery() string {
 	query := ""
 

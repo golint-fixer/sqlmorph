@@ -17,7 +17,7 @@ func (s *SetState) Name() string {
 }
 
 func (s *SetState) Parse(result ast.Node, tokenizer *Tokenizer) (ast.Node, bool) {
-	concrete := result.(ast.Container)
+	concrete := result.(ast.WithFields)
 
 	if token, _ := tokenizer.ReadToken(); token != SET {
 		tokenizer.UnreadToken()

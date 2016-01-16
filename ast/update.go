@@ -7,14 +7,7 @@ type Update struct {
 	Fields
 }
 
-func NewUpdate() *Update {
-	return &Update{}
-}
-
-func (u *Update) AddField(field *Field) {
-	u.Fields = append(u.Fields, field)
-}
-
+// BuildQuery turns the node into an SQL statement.
 func (u *Update) BuildQuery() string {
 	query := "UPDATE " + u.GetTarget().BuildQuery()
 

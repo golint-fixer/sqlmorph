@@ -1,6 +1,6 @@
 package ast
 
-// RightJoin represents an inner join table relation in the SQL query.
+// RightJoin represents a right join table relation in the SQL query.
 type RightJoin struct {
 	Target
 
@@ -8,6 +8,7 @@ type RightJoin struct {
 	Right *Field
 }
 
+// BuildQuery turns the node into an SQL statement.
 func (j *RightJoin) BuildQuery() string {
 	return "RIGHT JOIN " + j.GetTarget().BuildQuery() + " ON " +
 		j.Left.BuildQuery() + "=" + j.Right.BuildQuery()

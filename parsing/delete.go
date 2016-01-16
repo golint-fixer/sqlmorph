@@ -19,8 +19,6 @@ func (s *DeleteState) Parse(result ast.Node, tokenizer *Tokenizer) (ast.Node, bo
 		tokenizer.UnreadToken()
 		return result, false
 	} else {
-		target := ast.NewDelete()
-
-		return target, true
+		return &ast.Delete{}, true
 	}
 }

@@ -17,7 +17,7 @@ func (s *OffsetState) Name() string {
 }
 
 func (s *OffsetState) Parse(result ast.Node, tokenizer *Tokenizer) (ast.Node, bool) {
-	concrete := result.(ast.Offsetable)
+	concrete := result.(ast.WithOffset)
 
 	if token, _ := tokenizer.ReadToken(); token != OFFSET {
 		tokenizer.UnreadToken()

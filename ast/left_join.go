@@ -1,6 +1,6 @@
 package ast
 
-// LeftJoin represents an inner join table relation in the SQL query.
+// LeftJoin represents a left join table relation in the SQL query.
 type LeftJoin struct {
 	Target
 
@@ -8,6 +8,7 @@ type LeftJoin struct {
 	Right *Field
 }
 
+// BuildQuery turns the node into an SQL statement.
 func (j *LeftJoin) BuildQuery() string {
 	return "LEFT JOIN " + j.GetTarget().BuildQuery() + " ON " +
 		j.Left.BuildQuery() + "=" + j.Right.BuildQuery()

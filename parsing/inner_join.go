@@ -20,7 +20,7 @@ func (s *InnerJoinState) Name() string {
 }
 
 func (s *InnerJoinState) Parse(result ast.Node, tokenizer *Tokenizer) (ast.Node, bool) {
-	concrete := result.(ast.Relationable)
+	concrete := result.(ast.WithRelations)
 
 	if token, _ := tokenizer.ReadToken(); token != INNER {
 		tokenizer.UnreadToken()

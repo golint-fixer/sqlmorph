@@ -16,8 +16,9 @@ func (s *WhereState) Name() string {
 	return "WHERE"
 }
 
+// Parse tries to parse a WHERE token from the tokenizer.
 func (s *WhereState) Parse(result ast.Node, tokenizer *Tokenizer) (ast.Node, bool) {
-	concrete := result.(ast.Filterable)
+	concrete := result.(ast.WithFilters)
 
 	if token, _ := tokenizer.ReadToken(); token != WHERE {
 		tokenizer.UnreadToken()

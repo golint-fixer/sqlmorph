@@ -22,13 +22,13 @@ func (s *SelectState) Parse(result ast.Node, tokenizer *Tokenizer) (ast.Node, bo
 		return result, false
 	}
 
-	target := ast.NewSelect()
+	concrete := &ast.Select{}
 
 	// Parse fields.
 	for {
 		token, value := tokenizer.ReadToken()
 		if token == LITERAL || token == ASTERISK {
-			target.AddField(parseField(value))
+			concrete.AddField(parseField(value))
 		} else {
 			wrongTokenPanic(SelectWithoutFieldsError, value)
 		}
@@ -39,5 +39,5 @@ func (s *SelectState) Parse(result ast.Node, tokenizer *Tokenizer) (ast.Node, bo
 		}
 	}
 
-	return target, true
+	return concrete, true
 }

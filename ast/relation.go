@@ -1,5 +1,4 @@
 package ast
 
-type Relation interface {
-	Node
-}
+// Relation is a relation of an AST node.
+type Relation Node

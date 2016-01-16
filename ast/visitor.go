@@ -1,11 +1,14 @@
 package ast
 
+// Visitor is an SQL AST node visitor.
 type Visitor struct{}
 
+// NewVisitor creates a new SQL AST node visitor.
 func NewVisitor() *Visitor {
 	return &Visitor{}
 }
 
+// Visit visits an SQL AST node and passes it to a handle.
 func (v *Visitor) Visit(node Node, handle func(Node)) {
 	handle(node)
 

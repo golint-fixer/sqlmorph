@@ -1,15 +1,12 @@
 package ast
 
-// Delete represents an DELETE SQL query AST node.
+// Delete represents a DELETE SQL query AST node.
 type Delete struct {
 	Target
 	Filters
 }
 
-func NewDelete() *Delete {
-	return &Delete{}
-}
-
+// BuildQuery turns the node into an SQL statement.
 func (d *Delete) BuildQuery() string {
 	query := "DELETE FROM " + d.GetTarget().BuildQuery()
 

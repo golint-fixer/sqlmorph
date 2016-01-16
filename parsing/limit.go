@@ -17,7 +17,7 @@ func (s *LimitState) Name() string {
 }
 
 func (s *LimitState) Parse(result ast.Node, tokenizer *Tokenizer) (ast.Node, bool) {
-	concrete := result.(ast.Limitable)
+	concrete := result.(ast.WithLimit)
 
 	if token, _ := tokenizer.ReadToken(); token != LIMIT {
 		tokenizer.UnreadToken()

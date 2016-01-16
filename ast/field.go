@@ -7,6 +7,7 @@ type Field struct {
 	Value  string
 }
 
+// BuildQuery turns the node into an SQL statement.
 func (f *Field) BuildQuery() string {
 	field := ""
 	if f.Target != "" {

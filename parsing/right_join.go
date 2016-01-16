@@ -20,7 +20,7 @@ func (s *RightJoinState) Name() string {
 }
 
 func (s *RightJoinState) Parse(result ast.Node, tokenizer *Tokenizer) (ast.Node, bool) {
-	concrete := result.(ast.Relationable)
+	concrete := result.(ast.WithRelations)
 
 	if token, _ := tokenizer.ReadToken(); token != RIGHT {
 		tokenizer.UnreadToken()
