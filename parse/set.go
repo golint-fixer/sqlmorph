@@ -1,4 +1,4 @@
-package parsing
+package parse
 
 import (
 	"github.com/s2gatev/sqlmorph/ast"

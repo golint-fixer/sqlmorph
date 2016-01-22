@@ -1,4 +1,4 @@
-package parsing
+package parse
 
 type Token int
 

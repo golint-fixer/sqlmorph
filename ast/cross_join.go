@@ -4,8 +4,3 @@ package ast
 type CrossJoin struct {
 	Target
 }
-
-// BuildQuery turns the node into an SQL statement.
-func (j *CrossJoin) BuildQuery() string {
-	return "CROSS JOIN " + j.GetTarget().BuildQuery()
-}

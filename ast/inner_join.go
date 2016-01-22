@@ -7,9 +7,3 @@ type InnerJoin struct {
 	Left  *Field
 	Right *Field
 }
-
-// BuildQuery turns the node into an SQL statement.
-func (j *InnerJoin) BuildQuery() string {
-	return "INNER JOIN " + j.GetTarget().BuildQuery() + " ON " +
-		j.Left.BuildQuery() + "=" + j.Right.BuildQuery()
-}

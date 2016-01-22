@@ -1,4 +1,4 @@
-package parsing
+package parse
 
 // BaseState provides base functionality to parse states.
 type BaseState struct {

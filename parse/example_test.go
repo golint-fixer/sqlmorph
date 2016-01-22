@@ -1,11 +1,11 @@
-package parsing_test
+package parse_test
 
 import (
 	"fmt"
 	"reflect"
 
 	"github.com/s2gatev/sqlmorph/ast"
-	"github.com/s2gatev/sqlmorph/parsing"
+	"github.com/s2gatev/sqlmorph/parse"
 )
 
 func ExampleSelectParsing() {
@@ -23,7 +23,7 @@ func ExampleSelectParsing() {
 		},
 		Target: ast.Target{Name: "User", Alias: "u"},
 	}
-	actual, _ := parsing.NewParser().ParseString(query)
+	actual, _ := parse.NewParser().ParseString(query)
 
 	fmt.Print(reflect.DeepEqual(actual, expected))
 

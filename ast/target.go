@@ -16,15 +16,6 @@ type Target struct {
 	Alias string
 }
 
-// BuildQuery turns the node into an SQL statement.
-func (t *Target) BuildQuery() string {
-	query := t.Name
-	if t.Alias != "" {
-		query += " " + t.Alias
-	}
-	return query
-}
-
 // SetTarget sets the target of the node.
 func (t *Target) SetTarget(target *Target) {
 	*t = *target

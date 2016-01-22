@@ -7,9 +7,3 @@ type LeftJoin struct {
 	Left  *Field
 	Right *Field
 }
-
-// BuildQuery turns the node into an SQL statement.
-func (j *LeftJoin) BuildQuery() string {
-	return "LEFT JOIN " + j.GetTarget().BuildQuery() + " ON " +
-		j.Left.BuildQuery() + "=" + j.Right.BuildQuery()
-}

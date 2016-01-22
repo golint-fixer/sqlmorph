@@ -1,10 +1,10 @@
-package parsing_test
+package parse_test
 
 import (
 	"strings"
 	"testing"
 
-	. "github.com/s2gatev/sqlmorph/parsing"
+	. "github.com/s2gatev/sqlmorph/parse"
 )
 
 type lexerTest struct {

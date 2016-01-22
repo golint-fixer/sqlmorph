@@ -1,43 +1,43 @@
-package parsing
+package parse
 
 import (
 	"github.com/s2gatev/sqlmorph/ast"
 )
 
 const (
-	RightWithoutJoinError         = "Expected JOIN following RIGHT."
-	RightJoinWithoutTargetError   = "RIGHT JOIN statement must be followed by a target class."
-	RightJoinWithoutOnError       = "RIGHT JOIN statement must have an ON clause."
-	RightJoinWrongJoinFieldsError = "Wrong join fields in RIGHT JOIN statement."
+	InnerWithoutJoinError         = "Expected JOIN following INNER."
+	InnerJoinWithoutTargetError   = "INNER JOIN statement must be followed by a target class."
+	InnerJoinWithoutOnError       = "INNER JOIN statement must have an ON clause."
+	InnerJoinWrongJoinFieldsError = "Wrong join fields in INNER JOIN statement."
 )
 
-type RightJoinState struct {
+type InnerJoinState struct {
 	BaseState
 }
 
-func (s *RightJoinState) Name() string {
-	return "RIGHT JOIN"
+func (s *InnerJoinState) Name() string {
+	return "INNER JOIN"
 }
 
-func (s *RightJoinState) Parse(result ast.Node, tokenizer *Tokenizer) (ast.Node, bool) {
+func (s *InnerJoinState) Parse(result ast.Node, tokenizer *Tokenizer) (ast.Node, bool) {
 	concrete := result.(ast.WithRelations)
 
-	if token, _ := tokenizer.ReadToken(); token != RIGHT {
+	if token, _ := tokenizer.ReadToken(); token != INNER {
 		tokenizer.UnreadToken()
 		return result, false
 	}
 
 	if token, value := tokenizer.ReadToken(); token != JOIN {
-		wrongTokenPanic(RightWithoutJoinError, value)
+		wrongTokenPanic(InnerWithoutJoinError, value)
 	}
 
-	join := &ast.RightJoin{}
+	join := &ast.InnerJoin{}
 	target := &ast.Target{}
 
 	if token, tableName := tokenizer.ReadToken(); token == LITERAL {
 		target.Name = tableName
 	} else {
-		wrongTokenPanic(RightJoinWithoutTargetError, tableName)
+		wrongTokenPanic(InnerJoinWithoutTargetError, tableName)
 	}
 
 	if token, tableAlias := tokenizer.ReadToken(); token == LITERAL {
@@ -49,23 +49,23 @@ func (s *RightJoinState) Parse(result ast.Node, tokenizer *Tokenizer) (ast.Node,
 	join.SetTarget(target)
 
 	if token, value := tokenizer.ReadToken(); token != ON {
-		wrongTokenPanic(RightJoinWithoutOnError, value)
+		wrongTokenPanic(InnerJoinWithoutOnError, value)
 	}
 
 	if token, leftField := tokenizer.ReadToken(); token == LITERAL {
 		join.Left = parseField(leftField)
 	} else {
-		wrongTokenPanic(RightJoinWrongJoinFieldsError, leftField)
+		wrongTokenPanic(InnerJoinWrongJoinFieldsError, leftField)
 	}
 
 	if token, operator := tokenizer.ReadToken(); token != EQUALS {
-		wrongTokenPanic(RightJoinWrongJoinFieldsError, operator)
+		wrongTokenPanic(InnerJoinWrongJoinFieldsError, operator)
 	}
 
 	if token, rightField := tokenizer.ReadToken(); token == LITERAL {
 		join.Right = parseField(rightField)
 	} else {
-		wrongTokenPanic(RightJoinWrongJoinFieldsError, rightField)
+		wrongTokenPanic(InnerJoinWrongJoinFieldsError, rightField)
 	}
 
 	concrete.AddRelation(join)
